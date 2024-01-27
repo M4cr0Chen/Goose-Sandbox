@@ -1,21 +1,34 @@
+using System;
 using UnityEngine;
 
 public class Player2Movement : MonoBehaviour
 {
     [SerializeField] private float speed;
-    private Rigidbody2D body;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private Rigidbody2D body;
+    private float horizontalInput;
+    private float verticalInput;
+    private float jumpingPower = 30f;
     private float PositiveSpeed;
     private float NegativeSpeed;
     public float friction = 5f; // Adjust the friction value as needed
     
-    public LayerMask PlayerLayer;
-    public LayerMask groundLayer; // Set this in the Unity Editor to include the ground layer
+    [SerializeField] public LayerMask PlayerLayer;
+    [SerializeField] public LayerMask groundLayer; // Set this in the Unity Editor to include the ground layer
     public float groundCheckDistance = 0.1f; // Adjust the radius based on your player's size
+    public Player1Movement Player1;
+    
+    
     
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
 
+    }
+    
+    private bool IsGrounded()
+    {
+        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
     }
 
     private void Update()
@@ -46,29 +59,53 @@ public class Player2Movement : MonoBehaviour
          }
          else // Normal Movement
          {*/
+        
+        // Get input for movement
+        horizontalInput = Input.GetAxisRaw("Horizontal1");
+        verticalInput = Input.GetAxisRaw("Vertical1");
+        
+        
              if (Input.GetKey(KeyCode.LeftArrow))
              {
-                 body.velocity = new Vector2(speed * 2 * NegativeSpeed, body.velocity.y);
+                 body.velocity = new Vector2(NegativeSpeed * speed, body.velocity.y);
              }
+             /*if (Input.GetKeyUp(KeyCode.LeftArrow))
+             {
+                 body.velocity = new Vector2(body.velocity.x * 0.5f, body.velocity.y);
+             }*/
          
              if (Input.GetKey(KeyCode.RightArrow))
              {
-                 body.velocity = new Vector2(speed * 2 * PositiveSpeed, body.velocity.y);
+                 body.velocity = new Vector2(PositiveSpeed * speed, body.velocity.y);
              }
-         
-             if (Input.GetKey(KeyCode.UpArrow))
+             /*if (Input.GetKeyUp(KeyCode.RightArrow))
              {
-                 body.velocity = new Vector2(body.velocity.x, speed * 1);
+                 body.velocity = new Vector2(body.velocity.x * 0.5f, body.velocity.y);
+             }*/
+         
+             if (Input.GetKey(KeyCode.UpArrow) & IsGrounded())
+             {
+                 body.velocity = new Vector2(body.velocity.x, jumpingPower);
              }
+             
+             /*if (Input.GetKeyUp(KeyCode.UpArrow) && body.velocity.y > 0f)
+             {
+                 body.velocity = new Vector2(body.velocity.x, body.velocity.y * 0.5f);
+             }*/
          
              if (Input.GetKey(KeyCode.DownArrow))
              {
-                 body.velocity = new Vector2(body.velocity.x, speed * -1);
+                 body.velocity = new Vector2(body.velocity.x, NegativeSpeed * speed);
              }
 
-             if (Input.GetKey(KeyCode.Space))
+             /*if (Input.GetKeyDown(KeyCode.Space))
              {
                  body.velocity = new Vector2(body.velocity.x, speed);
+             }*/
+
+             if (IsGrounded())
+             {
+                 Debug.Log("Goose on ground");
              }
              //}
 
@@ -84,4 +121,12 @@ public class Player2Movement : MonoBehaviour
             
         }*/
     }
+    /*private void FixedUpdate()
+    {
+        body.velocity = new Vector2(horizontalInput * speed, body.velocity.y);
+        if (IsGrounded())
+        {
+            body.velocity = new Vector2(body.velocity.x, verticalInput * speed);
+        }
+    }*/
 }

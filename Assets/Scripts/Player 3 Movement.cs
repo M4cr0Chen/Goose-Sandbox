@@ -14,7 +14,20 @@ public class Player3Movement : MonoBehaviour
     // IsGrounded Variables
     public LayerMask groundLayer; // Set this in the Unity Editor to include the ground layer
     public float groundCheckDistance = 0.1f; // Adjust the distance based on your player's size
-    //public bool Grounded;
+    public bool Grounded;
+    
+    private void OnCollisionEnter2D (Collision2D Collision)
+    {
+        if (Collision.gameObject.name == "Ground")
+        {
+            Debug.Log("Collided To Ground");
+            Grounded = true;
+        }
+        else
+        {
+            Grounded = false;
+        }
+    }
 
     void Start()
     {
@@ -40,25 +53,12 @@ public class Player3Movement : MonoBehaviour
         }*/
         // Call the function to move the player using AddForce
         MovePlayer(horizontalInput, verticalInput);
-        //if (Grounded)// Simulate friction
-        ApplyFriction();
+        if (Grounded)
+        {
+            ApplyFriction();
+        }
+        
     }
-    
-    /*private void IsGrounded()
-    {
-        // Perform a raycast to check if the player is on the ground
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
-
-        // If the ray hits something, the player is considered grounded
-        if (hit.collider != null)
-        {
-            Grounded = true;
-        }
-        else
-        {
-            Grounded = false;
-        }
-    }*/
 
     void MovePlayer(float horizontal, float vertical)
     {

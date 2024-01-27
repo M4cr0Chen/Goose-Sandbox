@@ -5,21 +5,28 @@ using UnityEngine;
 
 public class Collision_Test : MonoBehaviour
 {
-    public bool Collided;
     private void OnCollisionEnter2D(Collision2D col)
     {
-        Debug.Log(" Non-trigger Colliders entering collision");
-        Collided = true;
+        if (col.gameObject.name == "Ground")
+        {
+            Debug.Log(" Non-trigger Colliders entering collision");
+        }
     }
 
     private void OnCollisionStay2D(Collision2D col)
     {
-        Debug.Log(" Non-trigger Colliders in collision");
+        if (col.gameObject.name == "Ground")
+        {
+            Debug.Log(" Non-trigger Colliders in collision");
+        }
+        
     }
 
     private void OnCollisionExit2D(Collision2D col)
     {
-        Debug.Log("Non-trigger Colliders exiting collision");
-        Collided = false;
+        if (col.gameObject.name == "Ground")
+        {
+            Debug.Log(" Non-trigger Colliders exits collision");
+        }
     }
 }
